@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Droplet, Menu, Phone, User, X, LogOut, LayoutDashboard } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
+import { CartDrawer } from "@/components/site/CartDrawer";
 import type { User as SBUser } from "@supabase/supabase-js";
 
 const nav = [
@@ -62,32 +63,35 @@ export function Header() {
           ))}
         </nav>
 
-        <div className="hidden items-center gap-2 md:flex">
+        <div className="flex items-center gap-2">
           <a
             href="tel:+919999999999"
-            className="flex items-center gap-1.5 text-sm font-medium text-muted-foreground hover:text-primary"
+            className="hidden items-center gap-1.5 text-sm font-medium text-muted-foreground hover:text-primary md:flex"
           >
             <Phone className="h-4 w-4" /> Call
           </a>
-          {user ? (
-            <>
-              <Button variant="ghost" size="sm" asChild>
-                <Link to="/dashboard"><LayoutDashboard className="mr-1.5 h-4 w-4" />Dashboard</Link>
+          <CartDrawer />
+          <div className="hidden items-center gap-2 md:flex">
+            {user ? (
+              <>
+                <Button variant="ghost" size="sm" asChild>
+                  <Link to="/dashboard"><LayoutDashboard className="mr-1.5 h-4 w-4" />Dashboard</Link>
+                </Button>
+                <Button variant="ghost" size="sm" onClick={signOut}>
+                  <LogOut className="h-4 w-4" />
+                </Button>
+              </>
+            ) : (
+              <Button size="sm" asChild>
+                <Link to="/auth"><User className="mr-1.5 h-4 w-4" /> Sign in</Link>
               </Button>
-              <Button variant="ghost" size="sm" onClick={signOut}>
-                <LogOut className="h-4 w-4" />
-              </Button>
-            </>
-          ) : (
-            <Button size="sm" asChild>
-              <Link to="/auth"><User className="mr-1.5 h-4 w-4" /> Sign in</Link>
-            </Button>
-          )}
+            )}
+          </div>
         </div>
 
         <button
           onClick={() => setOpen((o) => !o)}
-          className="grid h-10 w-10 place-items-center rounded-md hover:bg-secondary lg:hidden"
+          className="ml-1 grid h-10 w-10 place-items-center rounded-md hover:bg-secondary lg:hidden"
           aria-label="Menu"
         >
           {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
