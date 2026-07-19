@@ -14,16 +14,254 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      categories: {
+        Row: {
+          created_at: string
+          description: string | null
+          icon: string | null
+          id: string
+          name: string
+          slug: string
+          sort_order: number
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          icon?: string | null
+          id?: string
+          name: string
+          slug: string
+          sort_order?: number
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          icon?: string | null
+          id?: string
+          name?: string
+          slug?: string
+          sort_order?: number
+        }
+        Relationships: []
+      }
+      complaints: {
+        Row: {
+          address: string
+          assigned_to: string | null
+          category: string
+          city: string | null
+          created_at: string
+          description: string
+          email: string | null
+          id: string
+          name: string
+          phone: string
+          priority: Database["public"]["Enums"]["complaint_priority"]
+          resolution_notes: string | null
+          status: Database["public"]["Enums"]["complaint_status"]
+          ticket_number: string
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          address: string
+          assigned_to?: string | null
+          category: string
+          city?: string | null
+          created_at?: string
+          description: string
+          email?: string | null
+          id?: string
+          name: string
+          phone: string
+          priority?: Database["public"]["Enums"]["complaint_priority"]
+          resolution_notes?: string | null
+          status?: Database["public"]["Enums"]["complaint_status"]
+          ticket_number?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          address?: string
+          assigned_to?: string | null
+          category?: string
+          city?: string | null
+          created_at?: string
+          description?: string
+          email?: string | null
+          id?: string
+          name?: string
+          phone?: string
+          priority?: Database["public"]["Enums"]["complaint_priority"]
+          resolution_notes?: string | null
+          status?: Database["public"]["Enums"]["complaint_status"]
+          ticket_number?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      products: {
+        Row: {
+          brand: string | null
+          category_id: string | null
+          created_at: string
+          description: string | null
+          discount_price: number | null
+          features: Json
+          id: string
+          image_url: string | null
+          is_active: boolean
+          is_featured: boolean
+          name: string
+          price: number
+          rating: number | null
+          slug: string
+          specs: Json
+          stock: number
+          updated_at: string
+          warranty: string | null
+        }
+        Insert: {
+          brand?: string | null
+          category_id?: string | null
+          created_at?: string
+          description?: string | null
+          discount_price?: number | null
+          features?: Json
+          id?: string
+          image_url?: string | null
+          is_active?: boolean
+          is_featured?: boolean
+          name: string
+          price?: number
+          rating?: number | null
+          slug: string
+          specs?: Json
+          stock?: number
+          updated_at?: string
+          warranty?: string | null
+        }
+        Update: {
+          brand?: string | null
+          category_id?: string | null
+          created_at?: string
+          description?: string | null
+          discount_price?: number | null
+          features?: Json
+          id?: string
+          image_url?: string | null
+          is_active?: boolean
+          is_featured?: boolean
+          name?: string
+          price?: number
+          rating?: number | null
+          slug?: string
+          specs?: Json
+          stock?: number
+          updated_at?: string
+          warranty?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "products_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          address: string | null
+          city: string | null
+          created_at: string
+          full_name: string | null
+          id: string
+          phone: string | null
+          updated_at: string
+        }
+        Insert: {
+          address?: string | null
+          city?: string | null
+          created_at?: string
+          full_name?: string | null
+          id: string
+          phone?: string | null
+          updated_at?: string
+        }
+        Update: {
+          address?: string | null
+          city?: string | null
+          created_at?: string
+          full_name?: string | null
+          id?: string
+          phone?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_complaint_by_ticket: {
+        Args: { _ticket: string }
+        Returns: {
+          category: string
+          city: string
+          created_at: string
+          description: string
+          name: string
+          priority: Database["public"]["Enums"]["complaint_priority"]
+          resolution_notes: string
+          status: Database["public"]["Enums"]["complaint_status"]
+          ticket_number: string
+          updated_at: string
+        }[]
+      }
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "technician" | "customer"
+      complaint_priority: "normal" | "high" | "emergency"
+      complaint_status:
+        | "open"
+        | "assigned"
+        | "in_progress"
+        | "waiting_parts"
+        | "resolved"
+        | "closed"
+        | "cancelled"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +388,18 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "technician", "customer"],
+      complaint_priority: ["normal", "high", "emergency"],
+      complaint_status: [
+        "open",
+        "assigned",
+        "in_progress",
+        "waiting_parts",
+        "resolved",
+        "closed",
+        "cancelled",
+      ],
+    },
   },
 } as const
