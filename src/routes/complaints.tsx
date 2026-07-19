@@ -95,7 +95,7 @@ function ComplaintsPage() {
           </div>
 
           <div className="mt-6 flex flex-wrap justify-center gap-3">
-            <Button asChild><Link to="/track" search={{ ticket } as any}>Track this complaint</Link></Button>
+            <Button asChild><Link to="/track">Track this complaint</Link></Button>
             <Button variant="outline" onClick={() => { setTicket(null); navigate({ to: "/complaints" }); }}>Submit another</Button>
           </div>
         </div>
