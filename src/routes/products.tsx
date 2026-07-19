@@ -1,16 +1,21 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
-import { Droplet, Search, Star } from "lucide-react";
+import { useMemo, useState } from "react";
+import { Droplet, Loader2, Search, ShoppingCart } from "lucide-react";
+import { toast } from "sonner";
 import { SiteShell } from "@/components/site/SiteShell";
-import { supabase } from "@/integrations/supabase/client";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { PRODUCTS_QUERY, formatPrice, storefrontApiRequest, type ShopifyProduct } from "@/lib/shopify";
+import { useCartStore } from "@/stores/cartStore";
 
 export const Route = createFileRoute("/products")({
   head: () => ({
     meta: [
-      { title: "Products — RO Purifiers, Softeners & Spare Parts | Sujala" },
-      { name: "description", content: "Browse RO water purifiers, commercial and industrial RO plants, water softeners, membranes and filters." },
+      { title: "Shop — RO Purifiers, Softeners & Spares | Sujala" },
+      { name: "description", content: "Buy RO water purifiers, softeners, membranes and filters online. Secure checkout, warranty and installation included." },
+      { property: "og:title", content: "Sujala Shop — Water Purifiers & Spares" },
+      { property: "og:description", content: "Shop premium water purification products online with secure checkout." },
     ],
   }),
   component: ProductsPage,
@@ -18,100 +23,55 @@ export const Route = createFileRoute("/products")({
 
 function ProductsPage() {
   const [q, setQ] = useState("");
-  const [cat, setCat] = useState<string | null>(null);
-
-  const cats = useQuery({
-    queryKey: ["categories"],
-    queryFn: async () => {
-      const { data, error } = await supabase.from("categories").select("*").order("sort_order");
-      if (error) throw error;
-      return data;
-    },
-  });
-
   const products = useQuery({
-    queryKey: ["products", cat, q],
+    queryKey: ["shopify-products"],
     queryFn: async () => {
-      let query = supabase.from("products").select("*, categories(name, slug)").eq("is_active", true);
-      if (cat) query = query.eq("category_id", cat);
-      if (q) query = query.ilike("name", `%${q}%`);
-      const { data, error } = await query.order("is_featured", { ascending: false });
-      if (error) throw error;
-      return data;
+      const data = await storefrontApiRequest(PRODUCTS_QUERY, { first: 50, query: null });
+      return (data?.data?.products?.edges ?? []) as ShopifyProduct[];
     },
   });
+
+  const filtered = useMemo(() => {
+    if (!products.data) return [];
+    if (!q.trim()) return products.data;
+    const needle = q.toLowerCase();
+    return products.data.filter((p) => p.node.title.toLowerCase().includes(needle) || p.node.description.toLowerCase().includes(needle));
+  }, [products.data, q]);
 
   return (
     <SiteShell>
       <section className="border-b border-border bg-gradient-soft">
         <div className="mx-auto max-w-7xl px-4 py-14 md:px-6">
-          <div className="text-xs font-bold uppercase tracking-widest text-primary">Our catalog</div>
+          <div className="text-xs font-bold uppercase tracking-widest text-primary">Our shop</div>
           <h1 className="mt-2 text-4xl font-bold tracking-tight md:text-5xl">Water purifiers & spares</h1>
-          <p className="mt-2 max-w-2xl text-muted-foreground">Genuine products with warranty, installation and AMC options.</p>
+          <p className="mt-2 max-w-2xl text-muted-foreground">Genuine products with warranty and installation. Order online for doorstep delivery.</p>
           <div className="mt-6 max-w-md">
             <div className="relative">
               <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-              <Input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search RO purifiers, filters, membranes…" className="pl-9 h-11 bg-background" />
+              <Input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search products…" className="h-11 bg-background pl-9" />
             </div>
           </div>
         </div>
       </section>
 
       <section className="mx-auto max-w-7xl px-4 py-10 md:px-6">
-        <div className="flex flex-wrap gap-2">
-          <FilterPill active={!cat} onClick={() => setCat(null)}>All products</FilterPill>
-          {cats.data?.map((c) => (
-            <FilterPill key={c.id} active={cat === c.id} onClick={() => setCat(c.id)}>{c.name}</FilterPill>
-          ))}
-        </div>
-
         {products.isLoading ? (
-          <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {Array.from({ length: 8 }).map((_, i) => (
-              <div key={i} className="h-72 animate-pulse rounded-2xl bg-secondary" />
+              <div key={i} className="h-80 animate-pulse rounded-2xl bg-secondary" />
             ))}
           </div>
-        ) : products.data && products.data.length > 0 ? (
-          <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {products.data.map((p) => (
-              <Link key={p.id} to="/products/$slug" params={{ slug: p.slug }} className="group flex flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-card transition-all hover:-translate-y-1 hover:shadow-hover">
-                <div className="relative aspect-[4/3] overflow-hidden bg-gradient-soft">
-                  {p.image_url ? (
-                    <img src={p.image_url} alt={p.name} className="h-full w-full object-cover transition-transform group-hover:scale-105" />
-                  ) : (
-                    <div className="grid h-full w-full place-items-center text-primary/25">
-                      <Droplet className="h-16 w-16" />
-                    </div>
-                  )}
-                  {p.discount_price && p.discount_price < p.price && (
-                    <div className="absolute left-3 top-3 rounded-full bg-destructive px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-destructive-foreground">
-                      Save ₹{(p.price - p.discount_price).toLocaleString("en-IN")}
-                    </div>
-                  )}
-                </div>
-                <div className="flex flex-1 flex-col p-4">
-                  <div className="text-xs font-medium uppercase tracking-wider text-muted-foreground">{p.brand}</div>
-                  <div className="mt-1 line-clamp-2 text-sm font-semibold">{p.name}</div>
-                  <div className="mt-2 flex items-center gap-1 text-xs text-warning">
-                    <Star className="h-3.5 w-3.5 fill-warning" />
-                    <span className="font-medium text-foreground">{p.rating ?? 4.5}</span>
-                  </div>
-                  <div className="mt-auto pt-3">
-                    <div className="flex items-baseline gap-2">
-                      <span className="text-lg font-bold text-primary">₹{(p.discount_price ?? p.price).toLocaleString("en-IN")}</span>
-                      {p.discount_price && p.discount_price < p.price && (
-                        <span className="text-xs text-muted-foreground line-through">₹{p.price.toLocaleString("en-IN")}</span>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </Link>
-            ))}
+        ) : filtered.length > 0 ? (
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {filtered.map((p) => <ProductCard key={p.node.id} product={p} />)}
           </div>
         ) : (
-          <div className="mt-16 rounded-2xl border border-dashed border-border p-14 text-center">
-            <div className="text-lg font-semibold">No products match</div>
-            <p className="mt-1 text-sm text-muted-foreground">Try a different search or category.</p>
+          <div className="rounded-2xl border border-dashed border-border p-14 text-center">
+            <Droplet className="mx-auto h-10 w-10 text-primary/40" />
+            <div className="mt-3 text-lg font-semibold">No products found</div>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Ask the team to add products, or tell us in chat what you'd like to sell (name and price).
+            </p>
           </div>
         )}
       </section>
@@ -119,18 +79,48 @@ function ProductsPage() {
   );
 }
 
-function FilterPill({ active, onClick, children }: { active: boolean; onClick: () => void; children: React.ReactNode }) {
+function ProductCard({ product }: { product: ShopifyProduct }) {
+  const addItem = useCartStore((s) => s.addItem);
+  const isLoading = useCartStore((s) => s.isLoading);
+  const variant = product.node.variants.edges[0]?.node;
+  const img = product.node.images.edges[0]?.node;
+  const price = product.node.priceRange.minVariantPrice;
+
+  const handleAdd = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (!variant) return;
+    await addItem({
+      product,
+      variantId: variant.id,
+      variantTitle: variant.title,
+      price: variant.price,
+      quantity: 1,
+      selectedOptions: variant.selectedOptions || [],
+    });
+    toast.success("Added to cart", { position: "top-right" });
+  };
+
   return (
-    <button
-      onClick={onClick}
-      className={
-        "rounded-full border px-4 py-2 text-sm font-medium transition-all " +
-        (active
-          ? "border-primary bg-primary text-primary-foreground shadow-card"
-          : "border-border bg-background text-muted-foreground hover:border-primary/40 hover:text-foreground")
-      }
-    >
-      {children}
-    </button>
+    <Link to="/products/$slug" params={{ slug: product.node.handle }} className="group flex flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-card transition-all hover:-translate-y-1 hover:shadow-hover">
+      <div className="relative aspect-[4/3] overflow-hidden bg-gradient-soft">
+        {img ? (
+          <img src={img.url} alt={img.altText ?? product.node.title} className="h-full w-full object-cover transition-transform group-hover:scale-105" />
+        ) : (
+          <div className="grid h-full w-full place-items-center text-primary/25">
+            <Droplet className="h-16 w-16" />
+          </div>
+        )}
+      </div>
+      <div className="flex flex-1 flex-col p-4">
+        <div className="line-clamp-2 text-sm font-semibold">{product.node.title}</div>
+        <p className="mt-1 line-clamp-2 text-xs text-muted-foreground">{product.node.description}</p>
+        <div className="mt-auto flex items-center justify-between pt-3">
+          <span className="text-lg font-bold text-primary">{formatPrice(price.amount, price.currencyCode)}</span>
+          <Button size="sm" onClick={handleAdd} disabled={isLoading || !variant?.availableForSale}>
+            {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <><ShoppingCart className="mr-1.5 h-4 w-4" /> Add</>}
+          </Button>
+        </div>
+      </div>
+    </Link>
   );
 }

@@ -7,7 +7,7 @@ import {
 import heroImg from "@/assets/hero-purifier.jpg";
 import { SiteShell } from "@/components/site/SiteShell";
 import { Button } from "@/components/ui/button";
-import { supabase } from "@/integrations/supabase/client";
+import { PRODUCTS_QUERY, formatPrice, storefrontApiRequest, type ShopifyProduct } from "@/lib/shopify";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -21,14 +21,10 @@ export const Route = createFileRoute("/")({
 
 function HomePage() {
   const { data: featured } = useQuery({
-    queryKey: ["featured-products"],
+    queryKey: ["shopify-featured"],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("products")
-        .select("id, slug, name, brand, price, discount_price, image_url, rating")
-        .eq("is_active", true).eq("is_featured", true).limit(4);
-      if (error) throw error;
-      return data;
+      const data = await storefrontApiRequest(PRODUCTS_QUERY, { first: 4, query: null });
+      return (data?.data?.products?.edges ?? []) as ShopifyProduct[];
     },
   });
 
@@ -139,35 +135,34 @@ function HomePage() {
         <div className="mx-auto max-w-7xl px-4 py-20 md:px-6">
           <SectionHead eyebrow="Best sellers" title="Featured products" subtitle="Handpicked purifiers with the best value." action={{ to: "/products", label: "View all" }} />
           <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {featured?.map((p) => (
-              <Link key={p.id} to="/products/$slug" params={{ slug: p.slug }} className="group flex flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-card transition-all hover:-translate-y-1 hover:shadow-hover">
-                <div className="aspect-[4/3] overflow-hidden bg-gradient-soft">
-                  {p.image_url ? (
-                    <img src={p.image_url} alt={p.name} className="h-full w-full object-cover transition-transform group-hover:scale-105" />
-                  ) : (
-                    <div className="grid h-full w-full place-items-center text-primary/20">
-                      <Droplet className="h-16 w-16" />
-                    </div>
-                  )}
-                </div>
-                <div className="flex flex-1 flex-col p-4">
-                  <div className="text-xs font-medium uppercase tracking-wider text-muted-foreground">{p.brand}</div>
-                  <div className="mt-1 line-clamp-2 text-sm font-semibold">{p.name}</div>
-                  <div className="mt-2 flex items-center gap-1 text-xs text-warning">
-                    <Star className="h-3.5 w-3.5 fill-warning" />
-                    <span className="font-medium text-foreground">{p.rating ?? 4.5}</span>
+            {featured?.map((p) => {
+              const img = p.node.images.edges[0]?.node;
+              const price = p.node.priceRange.minVariantPrice;
+              return (
+                <Link key={p.node.id} to="/products/$slug" params={{ slug: p.node.handle }} className="group flex flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-card transition-all hover:-translate-y-1 hover:shadow-hover">
+                  <div className="aspect-[4/3] overflow-hidden bg-gradient-soft">
+                    {img ? (
+                      <img src={img.url} alt={img.altText ?? p.node.title} className="h-full w-full object-cover transition-transform group-hover:scale-105" />
+                    ) : (
+                      <div className="grid h-full w-full place-items-center text-primary/20">
+                        <Droplet className="h-16 w-16" />
+                      </div>
+                    )}
                   </div>
-                  <div className="mt-auto pt-3">
-                    <div className="flex items-baseline gap-2">
-                      <span className="text-lg font-bold text-primary">₹{(p.discount_price ?? p.price).toLocaleString("en-IN")}</span>
-                      {p.discount_price && (
-                        <span className="text-xs text-muted-foreground line-through">₹{p.price.toLocaleString("en-IN")}</span>
-                      )}
+                  <div className="flex flex-1 flex-col p-4">
+                    <div className="line-clamp-2 text-sm font-semibold">{p.node.title}</div>
+                    <div className="mt-auto pt-3">
+                      <span className="text-lg font-bold text-primary">{formatPrice(price.amount, price.currencyCode)}</span>
                     </div>
                   </div>
-                </div>
-              </Link>
-            ))}
+                </Link>
+              );
+            })}
+            {featured && featured.length === 0 && (
+              <div className="col-span-full rounded-2xl border border-dashed border-border p-10 text-center text-sm text-muted-foreground">
+                No products yet. Add products from the admin panel or ask in chat.
+              </div>
+            )}
           </div>
         </div>
       </section>
