@@ -104,10 +104,13 @@ function ProductDetail() {
           )}
 
           <div className="mt-8 flex flex-wrap gap-3">
-            <Button size="lg" onClick={handleAdd} disabled={!inStock}>
+            <Button size="lg" onClick={handleBuyNow} disabled={!inStock}>
+              <Zap className="mr-1.5 h-4 w-4" /> Buy now
+            </Button>
+            <Button size="lg" variant="outline" onClick={handleAdd} disabled={!inStock}>
               <ShoppingCart className="mr-1.5 h-4 w-4" /> Add to cart
             </Button>
-            <Button size="lg" variant="outline" asChild><Link to="/services">Book installation</Link></Button>
+            <Button size="lg" variant="ghost" asChild><Link to="/services">Book installation</Link></Button>
           </div>
 
           <div className="mt-8 grid grid-cols-3 gap-3 rounded-2xl border border-border bg-card p-4">
