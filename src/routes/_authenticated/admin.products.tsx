@@ -165,14 +165,28 @@ function ProductForm({
   const [isActive, setIsActive] = useState<boolean>(product?.is_active ?? true);
   const [isFeatured, setIsFeatured] = useState<boolean>(product?.is_featured ?? false);
   const [saving, setSaving] = useState(false);
+  const [uploading, setUploading] = useState(false);
 
   useEffect(() => { if (!product && name && !slug) setSlug(slugify(name)); }, [name]);
 
-  const onFile = (files: FileList | null) => {
-    if (!files?.[0]) return;
-    const reader = new FileReader();
-    reader.onload = () => setImageUrl(reader.result as string);
-    reader.readAsDataURL(files[0]);
+  const onFile = async (files: FileList | null) => {
+    const file = files?.[0];
+    if (!file) return;
+    if (file.size > 5 * 1024 * 1024) { toast.error("Image must be under 5MB"); return; }
+    setUploading(true);
+    try {
+      const ext = file.name.split(".").pop()?.toLowerCase() || "jpg";
+      const path = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+      const { error } = await supabase.storage.from("product-images").upload(path, file, {
+        cacheControl: "3600", upsert: false, contentType: file.type,
+      });
+      if (error) throw error;
+      const { data } = supabase.storage.from("product-images").getPublicUrl(path);
+      setImageUrl(data.publicUrl);
+      toast.success("Image uploaded");
+    } catch (e: any) {
+      toast.error(e.message || "Upload failed");
+    } finally { setUploading(false); }
   };
 
   const submit = async (e: React.FormEvent) => {
