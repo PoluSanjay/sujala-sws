@@ -47,7 +47,7 @@ export function Footer() {
           <div>
             <h4 className="mb-3 text-sm font-semibold">Reach us</h4>
             <ul className="space-y-2 text-sm text-muted-foreground">
-              <li className="flex items-start gap-2"><Phone className="mt-0.5 h-4 w-4 text-primary" /> +91 99999 99999</li>
+              <li className="flex items-start gap-2"><Phone className="mt-0.5 h-4 w-4 text-primary" /> +91 9949792248</li>
               <li className="flex items-start gap-2"><Mail className="mt-0.5 h-4 w-4 text-primary" /> care@sujala.in</li>
               <li className="flex items-start gap-2"><MapPin className="mt-0.5 h-4 w-4 text-primary" /> Service in your city</li>
             </ul>
