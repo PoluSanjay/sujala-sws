@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -55,6 +55,7 @@ function slugify(s: string) {
 function AdminProducts() {
   const qc = useQueryClient();
   const search = Route.useSearch();
+  const navigate = useNavigate();
 
   const products = useQuery({
     queryKey: ["admin-products-full"],
@@ -82,6 +83,15 @@ function AdminProducts() {
     const selected = products.data.find((product) => product.id === search.edit);
     if (selected) setEditing(selected);
   }, [products.data, search.edit]);
+
+  const clearEditParam = () => {
+    if (search.edit) navigate({ to: "/admin/products", search: { edit: undefined }, replace: true });
+  };
+  const closeForm = () => { setEditing(null); setCreating(false); clearEditParam(); };
+  const openEdit = (p: Product) => {
+    setEditing(p);
+    if (search.edit !== p.id) navigate({ to: "/admin/products", search: { edit: p.id }, replace: true });
+  };
 
   const del = useMutation({
     mutationFn: async (id: string) => {
@@ -128,7 +138,7 @@ function AdminProducts() {
                 </div>
                 <div className="mt-2 text-xs text-muted-foreground">Stock: {p.stock}</div>
                  <div className="mt-3 flex gap-2">
-                  <Button size="sm" variant="outline" className="flex-1" onClick={() => setEditing(p)}>
+                  <Button size="sm" variant="outline" className="flex-1" onClick={() => openEdit(p)}>
                     <Pencil className="mr-1 h-3.5 w-3.5" /> Edit price / image
                   </Button>
                   <Button size="sm" variant="ghost" className="text-destructive hover:text-destructive"
@@ -151,8 +161,8 @@ function AdminProducts() {
         <ProductForm
           product={editing}
           categories={categories.data ?? []}
-          onClose={() => { setEditing(null); setCreating(false); }}
-          onSaved={() => { qc.invalidateQueries({ queryKey: ["admin-products-full"] }); qc.invalidateQueries({ queryKey: ["products"] }); qc.invalidateQueries({ queryKey: ["featured-products"] }); setEditing(null); setCreating(false); }}
+          onClose={closeForm}
+          onSaved={() => { qc.invalidateQueries({ queryKey: ["admin-products-full"] }); qc.invalidateQueries({ queryKey: ["products"] }); qc.invalidateQueries({ queryKey: ["featured-products"] }); closeForm(); }}
         />
       )}
     </SiteShell>
