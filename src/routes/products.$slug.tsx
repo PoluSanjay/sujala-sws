@@ -23,6 +23,7 @@ export const Route = createFileRoute("/products/$slug")({
 function ProductDetail() {
   const { slug } = Route.useParams();
   const addItem = useCartStore((s) => s.addItem);
+  const navigate = useNavigate();
 
   const { data: product, isLoading } = useQuery({
     queryKey: ["product", slug],
@@ -41,7 +42,7 @@ function ProductDetail() {
   const inStock = (product.stock ?? 0) > 0;
   const features = Array.isArray(product.features) ? (product.features as string[]) : [];
 
-  const handleAdd = () => {
+  const addToCart = () => {
     addItem({
       productId: product.id,
       slug: product.slug,
@@ -50,8 +51,10 @@ function ProductDetail() {
       image: product.image_url,
       price,
     });
-    toast.success("Added to cart");
   };
+
+  const handleAdd = () => { addToCart(); toast.success("Added to cart"); };
+  const handleBuyNow = () => { addToCart(); navigate({ to: "/checkout" }); };
 
   return (
     <SiteShell>
