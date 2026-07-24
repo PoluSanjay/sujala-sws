@@ -1,7 +1,7 @@
-import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { createFileRoute, Link, notFound, useNavigate } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { ArrowLeft, Droplet, ShieldCheck, ShoppingCart, Truck, Wrench, CheckCircle2 } from "lucide-react";
+import { ArrowLeft, Droplet, ShieldCheck, ShoppingCart, Truck, Wrench, CheckCircle2, Zap } from "lucide-react";
 import { SiteShell } from "@/components/site/SiteShell";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
@@ -23,6 +23,7 @@ export const Route = createFileRoute("/products/$slug")({
 function ProductDetail() {
   const { slug } = Route.useParams();
   const addItem = useCartStore((s) => s.addItem);
+  const navigate = useNavigate();
 
   const { data: product, isLoading } = useQuery({
     queryKey: ["product", slug],
@@ -41,7 +42,7 @@ function ProductDetail() {
   const inStock = (product.stock ?? 0) > 0;
   const features = Array.isArray(product.features) ? (product.features as string[]) : [];
 
-  const handleAdd = () => {
+  const addToCart = () => {
     addItem({
       productId: product.id,
       slug: product.slug,
@@ -50,8 +51,10 @@ function ProductDetail() {
       image: product.image_url,
       price,
     });
-    toast.success("Added to cart");
   };
+
+  const handleAdd = () => { addToCart(); toast.success("Added to cart"); };
+  const handleBuyNow = () => { addToCart(); navigate({ to: "/checkout" }); };
 
   return (
     <SiteShell>
@@ -101,10 +104,13 @@ function ProductDetail() {
           )}
 
           <div className="mt-8 flex flex-wrap gap-3">
-            <Button size="lg" onClick={handleAdd} disabled={!inStock}>
+            <Button size="lg" onClick={handleBuyNow} disabled={!inStock}>
+              <Zap className="mr-1.5 h-4 w-4" /> Buy now
+            </Button>
+            <Button size="lg" variant="outline" onClick={handleAdd} disabled={!inStock}>
               <ShoppingCart className="mr-1.5 h-4 w-4" /> Add to cart
             </Button>
-            <Button size="lg" variant="outline" asChild><Link to="/services">Book installation</Link></Button>
+            <Button size="lg" variant="ghost" asChild><Link to="/services">Book installation</Link></Button>
           </div>
 
           <div className="mt-8 grid grid-cols-3 gap-3 rounded-2xl border border-border bg-card p-4">
