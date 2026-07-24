@@ -199,9 +199,18 @@ function AdminInner() {
                         <div className="mt-1 text-xs text-muted-foreground">{items.length} item{items.length !== 1 ? "s" : ""}</div>
                         <details className="mt-1 text-xs">
                           <summary className="cursor-pointer text-primary hover:underline">Items</summary>
-                          <ul className="mt-1 space-y-0.5">
+                          <ul className="mt-2 flex flex-wrap gap-2">
                             {items.map((item, index) => (
-                              <li key={index}>{String(item.quantity ?? 1)}× {String(item.name ?? "Product")}</li>
+                              <li key={index} className="flex items-center gap-2 rounded-md border border-border bg-background p-1">
+                                <div className="h-10 w-10 flex-shrink-0 overflow-hidden rounded-md bg-secondary/40 grid place-items-center">
+                                  {item.image ? (
+                                    <img src={String(item.image)} alt="" className="h-full w-full object-cover" />
+                                  ) : (
+                                    <Droplet className="h-4 w-4 text-primary/40" />
+                                  )}
+                                </div>
+                                <span className="pr-1 text-xs font-medium">{String(item.quantity ?? 1)}×</span>
+                              </li>
                             ))}
                           </ul>
                         </details>
