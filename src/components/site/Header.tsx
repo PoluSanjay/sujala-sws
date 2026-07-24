@@ -39,9 +39,7 @@ export function Header() {
     <header className="sticky top-0 z-40 border-b border-border/60 bg-background/85 backdrop-blur-md">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 md:px-6">
         <Link to="/" className="flex items-center gap-2">
-          <div className="grid h-9 w-9 place-items-center rounded-lg bg-gradient-hero shadow-card">
-            <Droplet className="h-5 w-5 text-white" strokeWidth={2.5} />
-          </div>
+          <img src={swsLogo.url} alt="Sujala Water Solutions" className="h-11 w-11 rounded-full object-cover ring-1 ring-border" />
           <div className="flex flex-col leading-none">
             <span className="text-[15px] font-bold tracking-tight text-foreground">SWS</span>
             <span className="text-[10px] font-medium uppercase tracking-widest text-muted-foreground">
