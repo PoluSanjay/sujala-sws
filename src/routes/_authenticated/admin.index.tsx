@@ -32,6 +32,8 @@ type AdminOrderPatch = {
 type OrderItem = {
   quantity?: unknown;
   name?: unknown;
+  image?: unknown;
+  price?: unknown;
 };
 
 function AdminPage() {
