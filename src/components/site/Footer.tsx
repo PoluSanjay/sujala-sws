@@ -53,8 +53,12 @@ export function Footer() {
             <h4 className="mb-3 text-sm font-semibold">Reach us</h4>
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li className="flex items-start gap-2"><Phone className="mt-0.5 h-4 w-4 text-primary" /> +91 9949792248</li>
+              <li className="flex items-start gap-2">
+                <WhatsAppIcon className="mt-0.5 h-4 w-4 text-[#25D366]" />
+                <a href="https://wa.me/919949792248" target="_blank" rel="noopener noreferrer" className="hover:text-[#25D366]">+91 9949792248</a>
+              </li>
               <li className="flex items-start gap-2"><Mail className="mt-0.5 h-4 w-4 text-primary" /> care@sujala.in</li>
-              <li className="flex items-start gap-2"><MapPin className="mt-0.5 h-4 w-4 text-primary" /> Service in your city</li>
+              <li className="flex items-start gap-2"><MapPin className="mt-0.5 h-4 w-4 text-primary" /> <a href="https://maps.app.goo.gl/YTEotBoCWof5gvMJA" target="_blank" rel="noopener noreferrer" className="hover:text-primary">Service in your city</a></li>
             </ul>
           </div>
         </div>
