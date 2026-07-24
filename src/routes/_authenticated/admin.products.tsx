@@ -138,7 +138,7 @@ function AdminProducts() {
                 </div>
                 <div className="mt-2 text-xs text-muted-foreground">Stock: {p.stock}</div>
                  <div className="mt-3 flex gap-2">
-                  <Button size="sm" variant="outline" className="flex-1" onClick={() => setEditing(p)}>
+                  <Button size="sm" variant="outline" className="flex-1" onClick={() => openEdit(p)}>
                     <Pencil className="mr-1 h-3.5 w-3.5" /> Edit price / image
                   </Button>
                   <Button size="sm" variant="ghost" className="text-destructive hover:text-destructive"
