@@ -24,6 +24,16 @@ const COMPLAINT_STATUSES = ["open", "assigned", "in_progress", "waiting_parts", 
 const ORDER_STATUSES = ["pending", "confirmed", "processing", "shipped", "delivered", "cancelled"] as const;
 const PAY_STATUSES = ["unpaid", "awaiting_verification", "paid", "refunded"] as const;
 
+type AdminOrderPatch = {
+  status?: string;
+  payment_status?: string;
+};
+
+type OrderItem = {
+  quantity?: unknown;
+  name?: unknown;
+};
+
 function AdminPage() {
   const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
 
@@ -104,10 +114,10 @@ function AdminInner() {
 
   const updateOrder = useMutation({
     mutationFn: async (v: { id: string; status?: string; payment_status?: string }) => {
-      const patch: Record<string, string> = {};
+      const patch: AdminOrderPatch = {};
       if (v.status) patch.status = v.status;
       if (v.payment_status) patch.payment_status = v.payment_status;
-      const { error } = await supabase.from("orders").update(patch).eq("id", v.id);
+      const { error } = await supabase.from("orders").update(patch as never).eq("id", v.id);
       if (error) throw error;
     },
     onSuccess: () => {
@@ -119,7 +129,7 @@ function AdminInner() {
 
   const updateComplaint = useMutation({
     mutationFn: async (v: { id: string; status: string }) => {
-      const { error } = await supabase.from("complaints").update({ status: v.status }).eq("id", v.id);
+      const { error } = await supabase.from("complaints").update({ status: v.status as never }).eq("id", v.id);
       if (error) throw error;
     },
     onSuccess: () => {
@@ -179,7 +189,7 @@ function AdminInner() {
               </thead>
               <tbody className="divide-y divide-border">
                 {orders.data?.map((order) => {
-                  const items = Array.isArray(order.items) ? order.items : [];
+                  const items = Array.isArray(order.items) ? (order.items as OrderItem[]) : [];
                   return (
                     <tr key={order.id} className="align-top hover:bg-secondary/30">
                       <td className="px-4 py-3">
@@ -189,7 +199,7 @@ function AdminInner() {
                           <summary className="cursor-pointer text-primary hover:underline">Items</summary>
                           <ul className="mt-1 space-y-0.5">
                             {items.map((item, index) => (
-                              <li key={index}>{item.quantity}× {item.name}</li>
+                              <li key={index}>{String(item.quantity ?? 1)}× {String(item.name ?? "Product")}</li>
                             ))}
                           </ul>
                         </details>
