@@ -202,12 +202,15 @@ function AdminInner() {
                             <li key={index} className="flex items-center gap-2 rounded-md border border-border bg-background p-1">
                               <div className="h-10 w-10 flex-shrink-0 overflow-hidden rounded-md bg-secondary/40 grid place-items-center">
                                 {item.image ? (
-                                  <img src={String(item.image)} alt="" className="h-full w-full object-cover" />
+                                  <img src={String(item.image)} alt={String(item.name ?? "product")} className="h-full w-full object-cover" />
                                 ) : (
                                   <Droplet className="h-4 w-4 text-primary/40" />
                                 )}
                               </div>
-                              <span className="pr-1 text-xs font-medium">{String(item.quantity ?? 1)}×</span>
+                              <div className="flex flex-col pr-1">
+                                <span className="text-xs font-medium leading-tight">{String(item.name ?? "Product")}</span>
+                                <span className="text-[10px] text-muted-foreground">{String(item.quantity ?? 1)}×</span>
+                              </div>
                             </li>
                           ))}
                         </ul>
