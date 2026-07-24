@@ -12,6 +12,9 @@ import { supabase } from "@/integrations/supabase/client";
 import { formatINR } from "@/stores/cartStore";
 
 export const Route = createFileRoute("/_authenticated/admin/products")({
+  validateSearch: (search) => ({
+    edit: typeof search.edit === "string" ? search.edit : undefined,
+  }),
   head: () => ({ meta: [{ title: "Manage Products | Sujala Admin" }] }),
   component: Gate,
 });
@@ -51,6 +54,7 @@ function slugify(s: string) {
 
 function AdminProducts() {
   const qc = useQueryClient();
+  const search = Route.useSearch();
 
   const products = useQuery({
     queryKey: ["admin-products-full"],
@@ -73,6 +77,12 @@ function AdminProducts() {
   const [editing, setEditing] = useState<Product | null>(null);
   const [creating, setCreating] = useState(false);
 
+  useEffect(() => {
+    if (!search.edit || !products.data?.length) return;
+    const selected = products.data.find((product) => product.id === search.edit);
+    if (selected) setEditing(selected);
+  }, [products.data, search.edit]);
+
   const del = useMutation({
     mutationFn: async (id: string) => {
       const { error } = await supabase.from("products").delete().eq("id", id);
@@ -90,8 +100,8 @@ function AdminProducts() {
             <Link to="/admin" className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-primary">
               <ArrowLeft className="h-3.5 w-3.5" /> Back to admin
             </Link>
-            <h1 className="mt-2 text-3xl font-bold tracking-tight md:text-4xl">Products</h1>
-            <p className="text-sm text-muted-foreground">Add, edit, price and manage products directly in your store.</p>
+            <h1 className="mt-2 text-3xl font-bold tracking-tight md:text-4xl">Edit products</h1>
+            <p className="text-sm text-muted-foreground">Use each product card's Edit button to change price, stock, image and details.</p>
           </div>
           <Button onClick={() => setCreating(true)}><Plus className="mr-1.5 h-4 w-4" /> Add product</Button>
         </div>
@@ -117,9 +127,9 @@ function AdminProducts() {
                   </div>
                 </div>
                 <div className="mt-2 text-xs text-muted-foreground">Stock: {p.stock}</div>
-                <div className="mt-3 flex gap-2">
+                 <div className="mt-3 flex gap-2">
                   <Button size="sm" variant="outline" className="flex-1" onClick={() => setEditing(p)}>
-                    <Pencil className="mr-1 h-3.5 w-3.5" /> Edit
+                    <Pencil className="mr-1 h-3.5 w-3.5" /> Edit price / image
                   </Button>
                   <Button size="sm" variant="ghost" className="text-destructive hover:text-destructive"
                     onClick={() => confirm(`Delete "${p.name}"?`) && del.mutate(p.id)} disabled={del.isPending}>

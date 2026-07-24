@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { AlertOctagon, Package, ShieldOff, ShoppingBag, Users, Wallet } from "lucide-react";
+import { AlertOctagon, Package, Pencil, ShieldOff, ShoppingBag, Users, Wallet } from "lucide-react";
 import { SiteShell } from "@/components/site/SiteShell";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -100,7 +100,7 @@ function AdminInner() {
             <h1 className="mt-2 text-3xl font-bold tracking-tight md:text-4xl">Operations dashboard</h1>
           </div>
           <div className="flex gap-2">
-            <Button variant="outline" asChild><Link to="/admin/products"><Package className="mr-1.5 h-4 w-4" /> Manage products</Link></Button>
+            <Button variant="outline" asChild><Link to="/admin/products"><Package className="mr-1.5 h-4 w-4" /> Add / edit products</Link></Button>
             <Button variant="outline" asChild><Link to="/admin/payment"><Wallet className="mr-1.5 h-4 w-4" /> Bank details</Link></Button>
           </div>
         </div>
@@ -239,7 +239,7 @@ function AdminInner() {
         <div>
           <div className="flex items-center justify-between">
             <h2 className="text-xl font-bold">Products ({products.data?.length ?? 0})</h2>
-            <Button asChild size="sm"><Link to="/admin/products">Manage products</Link></Button>
+            <Button asChild size="sm"><Link to="/admin/products">Add product</Link></Button>
           </div>
           <div className="mt-4 overflow-x-auto rounded-2xl border border-border bg-card shadow-card">
             <table className="min-w-full text-sm">
@@ -250,6 +250,7 @@ function AdminInner() {
                   <th className="px-4 py-3 text-right">Price</th>
                   <th className="px-4 py-3 text-right">Stock</th>
                   <th className="px-4 py-3 text-left">Status</th>
+                  <th className="px-4 py-3 text-right">Edit</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">
@@ -266,6 +267,13 @@ function AdminInner() {
                       <span className={"rounded-full px-2 py-0.5 text-xs font-semibold " + (p.is_active ? "bg-success/15 text-success" : "bg-muted text-muted-foreground")}>
                         {p.is_active ? "Active" : "Hidden"}
                       </span>
+                    </td>
+                    <td className="px-4 py-3 text-right">
+                      <Button asChild size="sm" variant="outline">
+                        <Link to="/admin/products" search={{ edit: p.id }}>
+                          <Pencil className="mr-1.5 h-3.5 w-3.5" /> Edit
+                        </Link>
+                      </Button>
                     </td>
                   </tr>
                 ))}
