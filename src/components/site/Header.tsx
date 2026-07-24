@@ -42,9 +42,9 @@ export function Header() {
             <Droplet className="h-5 w-5 text-white" strokeWidth={2.5} />
           </div>
           <div className="flex flex-col leading-none">
-            <span className="text-[15px] font-bold tracking-tight text-foreground">Sujala</span>
+            <span className="text-[15px] font-bold tracking-tight text-foreground">SWS</span>
             <span className="text-[10px] font-medium uppercase tracking-widest text-muted-foreground">
-              Water Solutions
+              Sujala Water Solutions
             </span>
           </div>
         </Link>

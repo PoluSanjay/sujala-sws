@@ -12,9 +12,9 @@ export function Footer() {
                 <Droplet className="h-5 w-5 text-white" />
               </div>
               <div>
-                <div className="text-[15px] font-bold">Sujala</div>
+                <div className="text-[15px] font-bold">SWS</div>
                 <div className="text-[10px] font-medium uppercase tracking-widest text-muted-foreground">
-                  Water Solutions
+                  Sujala Water Solutions
                 </div>
               </div>
             </Link>
