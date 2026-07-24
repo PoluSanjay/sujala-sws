@@ -147,7 +147,10 @@ function AdminInner() {
         </div>
 
         <div className="mt-10">
-          <h2 className="text-xl font-bold">Products ({products.data?.length ?? 0})</h2>
+          <div className="flex items-center justify-between">
+            <h2 className="text-xl font-bold">Products ({products.data?.length ?? 0})</h2>
+            <Button asChild size="sm"><Link to="/admin/products">Manage in Shopify</Link></Button>
+          </div>
           <div className="mt-4 overflow-x-auto rounded-2xl border border-border bg-card shadow-card">
             <table className="min-w-full text-sm">
               <thead className="bg-secondary/60 text-xs uppercase tracking-wider text-muted-foreground">
