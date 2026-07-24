@@ -1,10 +1,11 @@
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { Droplet, Menu, Phone, User, X, LogOut, LayoutDashboard } from "lucide-react";
+import { Menu, Phone, User, X, LogOut, LayoutDashboard } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { CartDrawer } from "@/components/site/CartDrawer";
 import type { User as SBUser } from "@supabase/supabase-js";
+import swsLogo from "@/assets/sws-logo.png.asset.json";
 
 const nav = [
   { to: "/", label: "Home" },
