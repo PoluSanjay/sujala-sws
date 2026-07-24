@@ -71,18 +71,21 @@ export function Header() {
         <div className="flex items-center gap-2">
           <a
             href="tel:+919949792248"
-            className="hidden items-center gap-1.5 text-sm font-medium text-muted-foreground hover:text-primary md:flex"
+            className="hidden h-9 w-9 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-secondary hover:text-primary md:flex"
+            aria-label="Call Sujala Water Solutions"
+            title="Call Sujala Water Solutions"
           >
-            <Phone className="h-4 w-4" /> +91 9949792248
+            <Phone className="h-4 w-4" />
           </a>
           <a
             href="https://wa.me/919949792248"
             target="_blank"
             rel="noopener noreferrer"
-            className="hidden items-center gap-1.5 text-sm font-medium text-[#25D366] hover:text-[#128C7E] md:flex"
+            className="hidden h-9 w-9 items-center justify-center rounded-md text-primary transition-colors hover:bg-secondary md:flex"
             aria-label="Chat on WhatsApp"
+            title="Chat on WhatsApp"
           >
-            <WhatsAppIcon className="h-4 w-4" /> WhatsApp
+            <WhatsAppIcon className="h-4 w-4" />
           </a>
           <CartDrawer />
           <div className="hidden items-center gap-2 md:flex">
@@ -141,20 +144,26 @@ export function Header() {
               )}
             </div>
             <div className="mt-2 flex flex-col gap-2 border-t border-border pt-3">
-              <a
-                href="tel:+919949792248"
-                className="flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium text-muted-foreground hover:bg-secondary hover:text-foreground"
-              >
-                <Phone className="h-4 w-4" /> +91 9949792248
-              </a>
-              <a
-                href="https://wa.me/919949792248"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium text-[#25D366] hover:bg-secondary"
-              >
-                <WhatsAppIcon className="h-4 w-4" /> WhatsApp
-              </a>
+              <div className="flex gap-2 px-3 py-2">
+                <a
+                  href="tel:+919949792248"
+                  className="grid h-10 w-10 place-items-center rounded-md text-muted-foreground hover:bg-secondary hover:text-primary"
+                  aria-label="Call Sujala Water Solutions"
+                  title="Call Sujala Water Solutions"
+                >
+                  <Phone className="h-4 w-4" />
+                </a>
+                <a
+                  href="https://wa.me/919949792248"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="grid h-10 w-10 place-items-center rounded-md text-primary hover:bg-secondary"
+                  aria-label="Chat on WhatsApp"
+                  title="Chat on WhatsApp"
+                >
+                  <WhatsAppIcon className="h-4 w-4" />
+                </a>
+              </div>
             </div>
           </div>
         </div>
