@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
-import { Droplet, Mail, MapPin, Phone } from "lucide-react";
+import { Mail, MapPin, Phone } from "lucide-react";
+import swsLogo from "@/assets/sws-logo.png.asset.json";
 
 export function Footer() {
   return (
@@ -8,9 +9,7 @@ export function Footer() {
         <div className="grid gap-10 md:grid-cols-4">
           <div>
             <Link to="/" className="mb-4 flex items-center gap-2">
-              <div className="grid h-9 w-9 place-items-center rounded-lg bg-gradient-hero">
-                <Droplet className="h-5 w-5 text-white" />
-              </div>
+              <img src={swsLogo.url} alt="Sujala Water Solutions" className="h-11 w-11 rounded-full object-cover ring-1 ring-border" />
               <div>
                 <div className="text-[15px] font-bold">SWS</div>
                 <div className="text-[10px] font-medium uppercase tracking-widest text-muted-foreground">
