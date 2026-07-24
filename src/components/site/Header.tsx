@@ -70,10 +70,19 @@ export function Header() {
 
         <div className="flex items-center gap-2">
           <a
-            href="tel:+919999999999"
+            href="tel:+919949792248"
             className="hidden items-center gap-1.5 text-sm font-medium text-muted-foreground hover:text-primary md:flex"
           >
-            <Phone className="h-4 w-4" /> Call
+            <Phone className="h-4 w-4" /> +91 9949792248
+          </a>
+          <a
+            href="https://wa.me/919949792248"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hidden items-center gap-1.5 text-sm font-medium text-[#25D366] hover:text-[#128C7E] md:flex"
+            aria-label="Chat on WhatsApp"
+          >
+            <WhatsAppIcon className="h-4 w-4" /> WhatsApp
           </a>
           <CartDrawer />
           <div className="hidden items-center gap-2 md:flex">
