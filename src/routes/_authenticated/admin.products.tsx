@@ -55,6 +55,7 @@ function slugify(s: string) {
 function AdminProducts() {
   const qc = useQueryClient();
   const search = Route.useSearch();
+  const navigate = useNavigate();
 
   const products = useQuery({
     queryKey: ["admin-products-full"],
@@ -82,6 +83,15 @@ function AdminProducts() {
     const selected = products.data.find((product) => product.id === search.edit);
     if (selected) setEditing(selected);
   }, [products.data, search.edit]);
+
+  const clearEditParam = () => {
+    if (search.edit) navigate({ to: "/admin/products", search: { edit: undefined }, replace: true });
+  };
+  const closeForm = () => { setEditing(null); setCreating(false); clearEditParam(); };
+  const openEdit = (p: Product) => {
+    setEditing(p);
+    if (search.edit !== p.id) navigate({ to: "/admin/products", search: { edit: p.id }, replace: true });
+  };
 
   const del = useMutation({
     mutationFn: async (id: string) => {
