@@ -1,7 +1,7 @@
-import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { createFileRoute, Link, notFound, useNavigate } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { ArrowLeft, Droplet, ShieldCheck, ShoppingCart, Truck, Wrench, CheckCircle2 } from "lucide-react";
+import { ArrowLeft, Droplet, ShieldCheck, ShoppingCart, Truck, Wrench, CheckCircle2, Zap } from "lucide-react";
 import { SiteShell } from "@/components/site/SiteShell";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
