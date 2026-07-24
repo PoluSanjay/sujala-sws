@@ -14,14 +14,17 @@ import { Route as ServicesRouteImport } from './routes/services'
 import { Route as ProductsRouteImport } from './routes/products'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as ComplaintsRouteImport } from './routes/complaints'
+import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ProductsSlugRouteImport } from './routes/products.$slug'
+import { Route as OrderNumberRouteImport } from './routes/order.$number'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedAdminProductsRouteImport } from './routes/_authenticated/admin.products'
+import { Route as AuthenticatedAdminPaymentRouteImport } from './routes/_authenticated/admin.payment'
 
 const TrackRoute = TrackRouteImport.update({
   id: '/track',
@@ -48,6 +51,11 @@ const ComplaintsRoute = ComplaintsRouteImport.update({
   path: '/complaints',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CheckoutRoute = CheckoutRouteImport.update({
+  id: '/checkout',
+  path: '/checkout',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
@@ -72,6 +80,11 @@ const ProductsSlugRoute = ProductsSlugRouteImport.update({
   path: '/$slug',
   getParentRoute: () => ProductsRoute,
 } as any)
+const OrderNumberRoute = OrderNumberRouteImport.update({
+  id: '/order/$number',
+  path: '/order/$number',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -88,11 +101,18 @@ const AuthenticatedAdminProductsRoute =
     path: '/products',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminPaymentRoute =
+  AuthenticatedAdminPaymentRouteImport.update({
+    id: '/payment',
+    path: '/payment',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/auth': typeof AuthRoute
+  '/checkout': typeof CheckoutRoute
   '/complaints': typeof ComplaintsRoute
   '/contact': typeof ContactRoute
   '/products': typeof ProductsRouteWithChildren
@@ -100,13 +120,16 @@ export interface FileRoutesByFullPath {
   '/track': typeof TrackRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/order/$number': typeof OrderNumberRoute
   '/products/$slug': typeof ProductsSlugRoute
+  '/admin/payment': typeof AuthenticatedAdminPaymentRoute
   '/admin/products': typeof AuthenticatedAdminProductsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/auth': typeof AuthRoute
+  '/checkout': typeof CheckoutRoute
   '/complaints': typeof ComplaintsRoute
   '/contact': typeof ContactRoute
   '/products': typeof ProductsRouteWithChildren
@@ -114,7 +137,9 @@ export interface FileRoutesByTo {
   '/track': typeof TrackRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/order/$number': typeof OrderNumberRoute
   '/products/$slug': typeof ProductsSlugRoute
+  '/admin/payment': typeof AuthenticatedAdminPaymentRoute
   '/admin/products': typeof AuthenticatedAdminProductsRoute
 }
 export interface FileRoutesById {
@@ -123,6 +148,7 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/about': typeof AboutRoute
   '/auth': typeof AuthRoute
+  '/checkout': typeof CheckoutRoute
   '/complaints': typeof ComplaintsRoute
   '/contact': typeof ContactRoute
   '/products': typeof ProductsRouteWithChildren
@@ -130,7 +156,9 @@ export interface FileRoutesById {
   '/track': typeof TrackRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/order/$number': typeof OrderNumberRoute
   '/products/$slug': typeof ProductsSlugRoute
+  '/_authenticated/admin/payment': typeof AuthenticatedAdminPaymentRoute
   '/_authenticated/admin/products': typeof AuthenticatedAdminProductsRoute
 }
 export interface FileRouteTypes {
@@ -139,6 +167,7 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/auth'
+    | '/checkout'
     | '/complaints'
     | '/contact'
     | '/products'
@@ -146,13 +175,16 @@ export interface FileRouteTypes {
     | '/track'
     | '/admin'
     | '/dashboard'
+    | '/order/$number'
     | '/products/$slug'
+    | '/admin/payment'
     | '/admin/products'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/about'
     | '/auth'
+    | '/checkout'
     | '/complaints'
     | '/contact'
     | '/products'
@@ -160,7 +192,9 @@ export interface FileRouteTypes {
     | '/track'
     | '/admin'
     | '/dashboard'
+    | '/order/$number'
     | '/products/$slug'
+    | '/admin/payment'
     | '/admin/products'
   id:
     | '__root__'
@@ -168,6 +202,7 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/about'
     | '/auth'
+    | '/checkout'
     | '/complaints'
     | '/contact'
     | '/products'
@@ -175,7 +210,9 @@ export interface FileRouteTypes {
     | '/track'
     | '/_authenticated/admin'
     | '/_authenticated/dashboard'
+    | '/order/$number'
     | '/products/$slug'
+    | '/_authenticated/admin/payment'
     | '/_authenticated/admin/products'
   fileRoutesById: FileRoutesById
 }
@@ -184,11 +221,13 @@ export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AboutRoute: typeof AboutRoute
   AuthRoute: typeof AuthRoute
+  CheckoutRoute: typeof CheckoutRoute
   ComplaintsRoute: typeof ComplaintsRoute
   ContactRoute: typeof ContactRoute
   ProductsRoute: typeof ProductsRouteWithChildren
   ServicesRoute: typeof ServicesRoute
   TrackRoute: typeof TrackRoute
+  OrderNumberRoute: typeof OrderNumberRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -228,6 +267,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ComplaintsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/checkout': {
+      id: '/checkout'
+      path: '/checkout'
+      fullPath: '/checkout'
+      preLoaderRoute: typeof CheckoutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/auth': {
       id: '/auth'
       path: '/auth'
@@ -263,6 +309,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProductsSlugRouteImport
       parentRoute: typeof ProductsRoute
     }
+    '/order/$number': {
+      id: '/order/$number'
+      path: '/order/$number'
+      fullPath: '/order/$number'
+      preLoaderRoute: typeof OrderNumberRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated/dashboard': {
       id: '/_authenticated/dashboard'
       path: '/dashboard'
@@ -284,14 +337,23 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminProductsRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/payment': {
+      id: '/_authenticated/admin/payment'
+      path: '/payment'
+      fullPath: '/admin/payment'
+      preLoaderRoute: typeof AuthenticatedAdminPaymentRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
   }
 }
 
 interface AuthenticatedAdminRouteChildren {
+  AuthenticatedAdminPaymentRoute: typeof AuthenticatedAdminPaymentRoute
   AuthenticatedAdminProductsRoute: typeof AuthenticatedAdminProductsRoute
 }
 
 const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
+  AuthenticatedAdminPaymentRoute: AuthenticatedAdminPaymentRoute,
   AuthenticatedAdminProductsRoute: AuthenticatedAdminProductsRoute,
 }
 
@@ -328,11 +390,13 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AboutRoute: AboutRoute,
   AuthRoute: AuthRoute,
+  CheckoutRoute: CheckoutRoute,
   ComplaintsRoute: ComplaintsRoute,
   ContactRoute: ContactRoute,
   ProductsRoute: ProductsRouteWithChildren,
   ServicesRoute: ServicesRoute,
   TrackRoute: TrackRoute,
+  OrderNumberRoute: OrderNumberRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

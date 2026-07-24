@@ -101,6 +101,105 @@ export type Database = {
         }
         Relationships: []
       }
+      orders: {
+        Row: {
+          address: string
+          admin_notes: string | null
+          city: string | null
+          created_at: string
+          customer_name: string
+          email: string | null
+          id: string
+          items: Json
+          notes: string | null
+          order_number: string
+          payment_method: Database["public"]["Enums"]["payment_method"]
+          payment_reference: string | null
+          payment_status: Database["public"]["Enums"]["payment_status"]
+          phone: string
+          pincode: string | null
+          status: Database["public"]["Enums"]["order_status"]
+          subtotal: number
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          address: string
+          admin_notes?: string | null
+          city?: string | null
+          created_at?: string
+          customer_name: string
+          email?: string | null
+          id?: string
+          items: Json
+          notes?: string | null
+          order_number?: string
+          payment_method: Database["public"]["Enums"]["payment_method"]
+          payment_reference?: string | null
+          payment_status?: Database["public"]["Enums"]["payment_status"]
+          phone: string
+          pincode?: string | null
+          status?: Database["public"]["Enums"]["order_status"]
+          subtotal: number
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          address?: string
+          admin_notes?: string | null
+          city?: string | null
+          created_at?: string
+          customer_name?: string
+          email?: string | null
+          id?: string
+          items?: Json
+          notes?: string | null
+          order_number?: string
+          payment_method?: Database["public"]["Enums"]["payment_method"]
+          payment_reference?: string | null
+          payment_status?: Database["public"]["Enums"]["payment_status"]
+          phone?: string
+          pincode?: string | null
+          status?: Database["public"]["Enums"]["order_status"]
+          subtotal?: number
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      payment_settings: {
+        Row: {
+          account_name: string | null
+          account_number: string | null
+          bank_name: string | null
+          id: string
+          ifsc: string | null
+          instructions: string | null
+          updated_at: string
+          upi_id: string | null
+        }
+        Insert: {
+          account_name?: string | null
+          account_number?: string | null
+          bank_name?: string | null
+          id?: string
+          ifsc?: string | null
+          instructions?: string | null
+          updated_at?: string
+          upi_id?: string | null
+        }
+        Update: {
+          account_name?: string | null
+          account_number?: string | null
+          bank_name?: string | null
+          id?: string
+          ifsc?: string | null
+          instructions?: string | null
+          updated_at?: string
+          upi_id?: string | null
+        }
+        Relationships: []
+      }
       products: {
         Row: {
           brand: string | null
@@ -243,6 +342,22 @@ export type Database = {
           updated_at: string
         }[]
       }
+      get_order_by_number: {
+        Args: { _order_number: string }
+        Returns: {
+          city: string
+          created_at: string
+          customer_name: string
+          items: Json
+          order_number: string
+          payment_method: Database["public"]["Enums"]["payment_method"]
+          payment_status: Database["public"]["Enums"]["payment_status"]
+          phone: string
+          status: Database["public"]["Enums"]["order_status"]
+          subtotal: number
+          updated_at: string
+        }[]
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -262,6 +377,15 @@ export type Database = {
         | "resolved"
         | "closed"
         | "cancelled"
+      order_status:
+        | "pending"
+        | "confirmed"
+        | "processing"
+        | "shipped"
+        | "delivered"
+        | "cancelled"
+      payment_method: "cod" | "bank_transfer"
+      payment_status: "unpaid" | "awaiting_verification" | "paid" | "refunded"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -400,6 +524,16 @@ export const Constants = {
         "closed",
         "cancelled",
       ],
+      order_status: [
+        "pending",
+        "confirmed",
+        "processing",
+        "shipped",
+        "delivered",
+        "cancelled",
+      ],
+      payment_method: ["cod", "bank_transfer"],
+      payment_status: ["unpaid", "awaiting_verification", "paid", "refunded"],
     },
   },
 } as const

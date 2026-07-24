@@ -1,36 +1,20 @@
-import { useEffect, useState } from "react";
-import { ShoppingCart, Minus, Plus, Trash2, ExternalLink, Loader2, Droplet } from "lucide-react";
+import { useState } from "react";
+import { Link } from "@tanstack/react-router";
+import { ShoppingCart, Minus, Plus, Trash2, Droplet, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
+  Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger,
 } from "@/components/ui/sheet";
-import { useCartStore } from "@/stores/cartStore";
-import { formatPrice } from "@/lib/shopify";
+import { useCartStore, formatINR } from "@/stores/cartStore";
 
 export function CartDrawer() {
   const [open, setOpen] = useState(false);
-  const { items, isLoading, isSyncing, updateQuantity, removeItem, getCheckoutUrl, syncCart } = useCartStore();
+  const items = useCartStore((s) => s.items);
+  const setQuantity = useCartStore((s) => s.setQuantity);
+  const removeItem = useCartStore((s) => s.removeItem);
   const totalItems = items.reduce((s, i) => s + i.quantity, 0);
-  const totalPrice = items.reduce((s, i) => s + parseFloat(i.price.amount) * i.quantity, 0);
-  const currency = items[0]?.price.currencyCode || "INR";
-
-  useEffect(() => {
-    if (open) syncCart();
-  }, [open, syncCart]);
-
-  const handleCheckout = () => {
-    const url = getCheckoutUrl();
-    if (url) {
-      window.open(url, "_blank");
-      setOpen(false);
-    }
-  };
+  const totalPrice = items.reduce((s, i) => s + i.price * i.quantity, 0);
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
@@ -57,66 +41,56 @@ export function CartDrawer() {
               <div className="text-center">
                 <ShoppingCart className="mx-auto mb-4 h-12 w-12 text-muted-foreground" />
                 <p className="text-muted-foreground">Nothing here yet</p>
+                <Button asChild className="mt-4" onClick={() => setOpen(false)}>
+                  <Link to="/products">Browse products</Link>
+                </Button>
               </div>
             </div>
           ) : (
             <>
               <div className="min-h-0 flex-1 overflow-y-auto pr-2">
                 <div className="space-y-4">
-                  {items.map((item) => {
-                    const img = item.product.node.images?.edges?.[0]?.node;
-                    return (
-                      <div key={item.variantId} className="flex gap-4 p-2">
-                        <div className="h-16 w-16 flex-shrink-0 overflow-hidden rounded-md bg-secondary/40 grid place-items-center">
-                          {img ? (
-                            <img src={img.url} alt={img.altText ?? item.product.node.title} className="h-full w-full object-cover" />
-                          ) : (
-                            <Droplet className="h-6 w-6 text-primary/40" />
-                          )}
-                        </div>
-                        <div className="min-w-0 flex-1">
-                          <h4 className="truncate font-medium">{item.product.node.title}</h4>
-                          {item.selectedOptions.length > 0 && item.variantTitle !== "Default Title" && (
-                            <p className="text-xs text-muted-foreground">{item.selectedOptions.map((o) => o.value).join(" • ")}</p>
-                          )}
-                          <p className="mt-1 font-semibold text-primary">
-                            {formatPrice(item.price.amount, item.price.currencyCode)}
-                          </p>
-                        </div>
-                        <div className="flex flex-shrink-0 flex-col items-end gap-2">
-                          <Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => removeItem(item.variantId)}>
-                            <Trash2 className="h-3 w-3" />
+                  {items.map((item) => (
+                    <div key={item.productId} className="flex gap-4 p-2">
+                      <div className="h-16 w-16 flex-shrink-0 overflow-hidden rounded-md bg-secondary/40 grid place-items-center">
+                        {item.image ? (
+                          <img src={item.image} alt={item.name} className="h-full w-full object-cover" />
+                        ) : (
+                          <Droplet className="h-6 w-6 text-primary/40" />
+                        )}
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <h4 className="truncate font-medium">{item.name}</h4>
+                        {item.brand && <p className="text-xs text-muted-foreground">{item.brand}</p>}
+                        <p className="mt-1 font-semibold text-primary">{formatINR(item.price)}</p>
+                      </div>
+                      <div className="flex flex-shrink-0 flex-col items-end gap-2">
+                        <Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => removeItem(item.productId)}>
+                          <Trash2 className="h-3 w-3" />
+                        </Button>
+                        <div className="flex items-center gap-1">
+                          <Button variant="outline" size="icon" className="h-6 w-6" onClick={() => setQuantity(item.productId, item.quantity - 1)}>
+                            <Minus className="h-3 w-3" />
                           </Button>
-                          <div className="flex items-center gap-1">
-                            <Button variant="outline" size="icon" className="h-6 w-6" onClick={() => updateQuantity(item.variantId, item.quantity - 1)}>
-                              <Minus className="h-3 w-3" />
-                            </Button>
-                            <span className="w-8 text-center text-sm">{item.quantity}</span>
-                            <Button variant="outline" size="icon" className="h-6 w-6" onClick={() => updateQuantity(item.variantId, item.quantity + 1)}>
-                              <Plus className="h-3 w-3" />
-                            </Button>
-                          </div>
+                          <span className="w-8 text-center text-sm">{item.quantity}</span>
+                          <Button variant="outline" size="icon" className="h-6 w-6" onClick={() => setQuantity(item.productId, item.quantity + 1)}>
+                            <Plus className="h-3 w-3" />
+                          </Button>
                         </div>
                       </div>
-                    );
-                  })}
+                    </div>
+                  ))}
                 </div>
               </div>
               <div className="flex-shrink-0 space-y-4 border-t bg-background pt-4">
                 <div className="flex items-center justify-between">
                   <span className="text-lg font-semibold">Total</span>
-                  <span className="text-xl font-bold text-primary">{formatPrice(totalPrice, currency)}</span>
+                  <span className="text-xl font-bold text-primary">{formatINR(totalPrice)}</span>
                 </div>
-                <Button onClick={handleCheckout} className="w-full" size="lg" disabled={items.length === 0 || isLoading || isSyncing}>
-                  {isLoading || isSyncing ? (
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                  ) : (
-                    <>
-                      <ExternalLink className="mr-2 h-4 w-4" /> Checkout securely
-                    </>
-                  )}
+                <Button asChild className="w-full" size="lg" onClick={() => setOpen(false)}>
+                  <Link to="/checkout">Proceed to checkout <ArrowRight className="ml-1.5 h-4 w-4" /></Link>
                 </Button>
-                <p className="text-center text-xs text-muted-foreground">Secure checkout powered by Shopify</p>
+                <p className="text-center text-xs text-muted-foreground">Cash on Delivery or Bank Transfer accepted.</p>
               </div>
             </>
           )}
