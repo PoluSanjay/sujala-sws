@@ -26,8 +26,8 @@ function ContactPage() {
 
       <section className="mx-auto max-w-5xl px-4 py-14 md:px-6">
         <div className="grid gap-5 md:grid-cols-3">
-          <Card icon={Phone} title="Call us" primary="+91 9949792248" desc="Mon–Sun · 9am – 9pm" href="tel:+919949792248" cta="Call now" />
-          <Card icon={MessageCircle} title="WhatsApp" primary={"+91 9949792248\n\n"} desc="Quick replies 24×7" href="https://wa.me/919949792248" cta="Open WhatsApp" />
+          <Card icon={Phone} title="Call us" primary="+91 9949792248" desc="Mon–Sun · 9am – 9pm" href="tel:+919949792248" cta="Call now" iconOnly />
+          <Card icon={MessageCircle} title="WhatsApp" primary="+91 9949792248" desc="Quick replies 24×7" href="https://wa.me/919949792248" cta="Open WhatsApp" iconOnly />
           <Card icon={Mail} title="Email" primary="2303a51731@sru.edu.in" desc="Support & AMC queries" href="mailto:2303a51731@sru.edu.in" cta="Send email" />
         </div>
 
