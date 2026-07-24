@@ -140,6 +140,22 @@ export function Header() {
                 </Button>
               )}
             </div>
+            <div className="mt-2 flex flex-col gap-2 border-t border-border pt-3">
+              <a
+                href="tel:+919949792248"
+                className="flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium text-muted-foreground hover:bg-secondary hover:text-foreground"
+              >
+                <Phone className="h-4 w-4" /> +91 9949792248
+              </a>
+              <a
+                href="https://wa.me/919949792248"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium text-[#25D366] hover:bg-secondary"
+              >
+                <WhatsAppIcon className="h-4 w-4" /> WhatsApp
+              </a>
+            </div>
           </div>
         </div>
       )}
