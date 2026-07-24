@@ -26,8 +26,8 @@ function ContactPage() {
 
       <section className="mx-auto max-w-5xl px-4 py-14 md:px-6">
         <div className="grid gap-5 md:grid-cols-3">
-          <Card icon={Phone} title="Call us" primary="+91 9949792248" desc="Mon–Sun · 9am – 9pm" href="tel:+919949792248" cta="Call now" />
-          <Card icon={MessageCircle} title="WhatsApp" primary={"+91 9949792248\n\n"} desc="Quick replies 24×7" href="https://wa.me/919949792248" cta="Open WhatsApp" />
+          <Card icon={Phone} title="Call us" primary="+91 9949792248" desc="Mon–Sun · 9am – 9pm" href="tel:+919949792248" cta="Call now" iconOnly />
+          <Card icon={MessageCircle} title="WhatsApp" primary="+91 9949792248" desc="Quick replies 24×7" href="https://wa.me/919949792248" cta="Open WhatsApp" iconOnly />
           <Card icon={Mail} title="Email" primary="2303a51731@sru.edu.in" desc="Support & AMC queries" href="mailto:2303a51731@sru.edu.in" cta="Send email" />
         </div>
 
@@ -43,12 +43,18 @@ function ContactPage() {
   );
 }
 
-function Card({ icon: Icon, title, primary, desc, href, cta }: any) {
+function Card({ icon: Icon, title, primary, desc, href, cta, iconOnly }: any) {
   return (
     <div className="flex flex-col rounded-2xl border border-border bg-card p-6 shadow-card">
       <Icon className="h-6 w-6 text-primary" />
       <div className="mt-4 text-sm font-semibold uppercase tracking-widest text-muted-foreground">{title}</div>
-      <div className="mt-1 text-xl font-bold">{primary}</div>
+      <div className="mt-1">
+        {iconOnly ? (
+          <Icon className="h-8 w-8 text-primary" aria-label={primary} />
+        ) : (
+          <div className="text-xl font-bold">{primary}</div>
+        )}
+      </div>
       <div className="mt-1 text-sm text-muted-foreground">{desc}</div>
       <Button variant="outline" asChild className="mt-4 w-full"><a href={href}>{cta}</a></Button>
     </div>
