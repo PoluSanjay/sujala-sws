@@ -95,11 +95,11 @@ function ProductsPage() {
 
 function ProductCard({ product }: { product: Row }) {
   const addItem = useCartStore((s) => s.addItem);
+  const navigate = useNavigate();
   const price = product.discount_price ?? product.price;
   const inStock = product.stock > 0;
 
-  const handleAdd = (e: React.MouseEvent) => {
-    e.preventDefault();
+  const addToCart = () => {
     addItem({
       productId: product.id,
       slug: product.slug,
@@ -108,37 +108,57 @@ function ProductCard({ product }: { product: Row }) {
       image: product.image_url,
       price: Number(price),
     });
+  };
+
+  const handleAdd = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    addToCart();
     toast.success("Added to cart");
   };
 
+  const handleBuyNow = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    addToCart();
+    navigate({ to: "/checkout" });
+  };
+
   return (
-    <Link to="/products/$slug" params={{ slug: product.slug }} className="group flex flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-card transition-all hover:-translate-y-1 hover:shadow-hover">
-      <div className="relative aspect-[4/3] overflow-hidden bg-gradient-soft">
-        {product.image_url ? (
-          <img src={product.image_url} alt={product.name} className="h-full w-full object-cover transition-transform group-hover:scale-105" />
-        ) : (
-          <div className="grid h-full w-full place-items-center text-primary/25">
-            <Droplet className="h-16 w-16" />
-          </div>
-        )}
-        {product.discount_price && (
-          <div className="absolute left-3 top-3 rounded-full bg-destructive px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-destructive-foreground">Sale</div>
-        )}
-      </div>
+    <div className="group flex flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-card transition-all hover:-translate-y-1 hover:shadow-hover">
+      <Link to="/products/$slug" params={{ slug: product.slug }} className="block">
+        <div className="relative aspect-[4/3] overflow-hidden bg-gradient-soft">
+          {product.image_url ? (
+            <img src={product.image_url} alt={product.name} className="h-full w-full object-cover transition-transform group-hover:scale-105" />
+          ) : (
+            <div className="grid h-full w-full place-items-center text-primary/25">
+              <Droplet className="h-16 w-16" />
+            </div>
+          )}
+          {product.discount_price && (
+            <div className="absolute left-3 top-3 rounded-full bg-destructive px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-destructive-foreground">Sale</div>
+          )}
+        </div>
+      </Link>
       <div className="flex flex-1 flex-col p-4">
         <div className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">{product.brand}</div>
-        <div className="line-clamp-2 text-sm font-semibold">{product.name}</div>
+        <Link to="/products/$slug" params={{ slug: product.slug }} className="hover:text-primary">
+          <div className="line-clamp-2 text-sm font-semibold">{product.name}</div>
+        </Link>
         {product.description && <p className="mt-1 line-clamp-2 text-xs text-muted-foreground">{product.description}</p>}
-        <div className="mt-auto flex items-center justify-between pt-3">
-          <div>
+        <div className="mt-auto pt-3">
+          <div className="flex items-baseline gap-2">
             <div className="text-lg font-bold text-primary">{formatINR(Number(price))}</div>
             {product.discount_price && <div className="text-xs text-muted-foreground line-through">{formatINR(Number(product.price))}</div>}
           </div>
-          <Button size="sm" onClick={handleAdd} disabled={!inStock}>
-            <ShoppingCart className="mr-1.5 h-4 w-4" /> {inStock ? "Add" : "Out"}
-          </Button>
+          <div className="mt-3 flex gap-2">
+            <Button size="sm" variant="outline" className="flex-1" onClick={handleAdd} disabled={!inStock}>
+              <ShoppingCart className="mr-1.5 h-4 w-4" /> {inStock ? "Add" : "Out"}
+            </Button>
+            <Button size="sm" className="flex-1" onClick={handleBuyNow} disabled={!inStock}>
+              <Zap className="mr-1.5 h-4 w-4" /> Buy now
+            </Button>
+          </div>
         </div>
       </div>
-    </Link>
+    </div>
   );
 }
