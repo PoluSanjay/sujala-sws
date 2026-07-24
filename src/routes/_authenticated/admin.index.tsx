@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { AlertOctagon, Package, Pencil, ShieldOff, ShoppingBag, Users, Wallet } from "lucide-react";
+import { AlertOctagon, Droplet, Package, Pencil, ShieldOff, ShoppingBag, Users, Wallet } from "lucide-react";
 import { SiteShell } from "@/components/site/SiteShell";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
