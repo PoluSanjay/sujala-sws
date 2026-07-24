@@ -262,7 +262,8 @@ function ProductForm({
               <div className="flex-1 space-y-2">
                 <Input placeholder="Image URL" value={imageUrl} onChange={(e) => setImageUrl(e.target.value)} />
                 <label className="inline-flex cursor-pointer items-center gap-1.5 rounded-md border border-border bg-background px-3 py-1.5 text-sm hover:bg-secondary">
-                  Upload file <input type="file" accept="image/*" className="hidden" onChange={(e) => onFile(e.target.files)} />
+                  {uploading ? <><Loader2 className="h-3.5 w-3.5 animate-spin" /> Uploading…</> : "Upload file"}
+                  <input type="file" accept="image/*" className="hidden" disabled={uploading} onChange={(e) => onFile(e.target.files)} />
                 </label>
               </div>
             </div>
