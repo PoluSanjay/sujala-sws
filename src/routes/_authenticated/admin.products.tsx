@@ -161,8 +161,8 @@ function AdminProducts() {
         <ProductForm
           product={editing}
           categories={categories.data ?? []}
-          onClose={() => { setEditing(null); setCreating(false); }}
-          onSaved={() => { qc.invalidateQueries({ queryKey: ["admin-products-full"] }); qc.invalidateQueries({ queryKey: ["products"] }); qc.invalidateQueries({ queryKey: ["featured-products"] }); setEditing(null); setCreating(false); }}
+          onClose={closeForm}
+          onSaved={() => { qc.invalidateQueries({ queryKey: ["admin-products-full"] }); qc.invalidateQueries({ queryKey: ["products"] }); qc.invalidateQueries({ queryKey: ["featured-products"] }); closeForm(); }}
         />
       )}
     </SiteShell>
