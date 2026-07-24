@@ -15,8 +15,8 @@ export const Route = createFileRoute("/")({
     meta: [
       { title: "Sujala Water Solutions — Better Service for Better Purification" },
       { name: "description", content: "Premium RO water purifiers, expert installation, AMC plans, and 24×7 repair service. Cash on Delivery available." },
-      { property: "og:title", content: "Sujala Water Solutions" },
-      { property: "og:description", content: "Premium RO water purifiers, expert installation, AMC plans, and 24×7 repair service." },
+      { property: "og:title", content: "Sujala Water Solutions — Better Service for Better Purification" },
+      { property: "og:description", content: "Premium RO water purifiers, expert installation, AMC plans, and 24×7 repair service. Cash on Delivery available." },
     ],
   }),
   component: HomePage,

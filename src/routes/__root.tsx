@@ -75,17 +75,21 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Sujala Water Solutions — RO Purifiers, Sales & Service" },
+      { title: "Sujala Water Solutions — Better Service for Better Purification" },
       {
         name: "description",
         content:
-          "Sujala Water Solutions — RO water purifiers, installation, AMC plans, service and spare parts. Better Service for Better Purification.",
+          "Premium RO water purifiers, expert installation, AMC plans, and 24×7 repair service. Cash on Delivery available.",
       },
       { name: "author", content: "Sujala Water Solutions" },
-      { property: "og:title", content: "Sujala Water Solutions — RO Purifiers, Sales & Service" },
-      { property: "og:description", content: "Better Service for Better Purification. RO sales, installation, AMC and repair." },
+      { property: "og:title", content: "Sujala Water Solutions — Better Service for Better Purification" },
+      { property: "og:description", content: "Premium RO water purifiers, expert installation, AMC plans, and 24×7 repair service. Cash on Delivery available." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "Sujala Water Solutions — Better Service for Better Purification" },
+      { name: "twitter:description", content: "Premium RO water purifiers, expert installation, AMC plans, and 24×7 repair service. Cash on Delivery available." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/4562cf80-6b2a-495e-9504-ef4614ef6e62/id-preview-2bdafbc5--b9a2db81-50c1-4155-8f3c-2e9f2c0bc7f9.lovable.app-1784869018086.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/4562cf80-6b2a-495e-9504-ef4614ef6e62/id-preview-2bdafbc5--b9a2db81-50c1-4155-8f3c-2e9f2c0bc7f9.lovable.app-1784869018086.png" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
