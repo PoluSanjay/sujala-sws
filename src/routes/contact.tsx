@@ -43,12 +43,18 @@ function ContactPage() {
   );
 }
 
-function Card({ icon: Icon, title, primary, desc, href, cta }: any) {
+function Card({ icon: Icon, title, primary, desc, href, cta, iconOnly }: any) {
   return (
     <div className="flex flex-col rounded-2xl border border-border bg-card p-6 shadow-card">
       <Icon className="h-6 w-6 text-primary" />
       <div className="mt-4 text-sm font-semibold uppercase tracking-widest text-muted-foreground">{title}</div>
-      <div className="mt-1 text-xl font-bold">{primary}</div>
+      <div className="mt-1">
+        {iconOnly ? (
+          <Icon className="h-8 w-8 text-primary" aria-label={primary} />
+        ) : (
+          <div className="text-xl font-bold">{primary}</div>
+        )}
+      </div>
       <div className="mt-1 text-sm text-muted-foreground">{desc}</div>
       <Button variant="outline" asChild className="mt-4 w-full"><a href={href}>{cta}</a></Button>
     </div>
