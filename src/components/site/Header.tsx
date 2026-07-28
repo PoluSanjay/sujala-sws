@@ -123,9 +123,14 @@ export function Header() {
                 </Button>
               </>
             ) : (
-              <Button size="sm" asChild>
-                <Link to="/auth"><User className="mr-1.5 h-4 w-4" /> Sign in</Link>
-              </Button>
+              <>
+                <Button size="sm" variant="outline" onClick={signInWithGoogle} aria-label="Sign in with Google" title="Sign in with Google">
+                  <GoogleIcon className="h-4 w-4" />
+                </Button>
+                <Button size="sm" asChild>
+                  <Link to="/auth"><User className="mr-1.5 h-4 w-4" /> Sign in</Link>
+                </Button>
+              </>
             )}
           </div>
         </div>
