@@ -53,6 +53,18 @@ export function Header() {
     navigate({ to: "/" });
   };
 
+  const signInWithGoogle = async () => {
+    const result = await lovable.auth.signInWithOAuth("google", { redirect_uri: window.location.origin });
+    if (result.error) {
+      toast.error("Google sign-in failed");
+      return;
+    }
+    if (!result.redirected) {
+      navigate({ to: "/dashboard" });
+    }
+  };
+
+
   return (
     <header className="sticky top-0 z-40 border-b border-border/60 bg-background/85 backdrop-blur-md">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 md:px-6">
@@ -111,9 +123,14 @@ export function Header() {
                 </Button>
               </>
             ) : (
-              <Button size="sm" asChild>
-                <Link to="/auth"><User className="mr-1.5 h-4 w-4" /> Sign in</Link>
-              </Button>
+              <>
+                <Button size="sm" variant="outline" onClick={signInWithGoogle} aria-label="Sign in with Google" title="Sign in with Google">
+                  <GoogleIcon className="h-4 w-4" />
+                </Button>
+                <Button size="sm" asChild>
+                  <Link to="/auth"><User className="mr-1.5 h-4 w-4" /> Sign in</Link>
+                </Button>
+              </>
             )}
           </div>
         </div>
@@ -150,9 +167,14 @@ export function Header() {
                   <Button size="sm" variant="ghost" onClick={signOut}><LogOut className="h-4 w-4" /></Button>
                 </>
               ) : (
-                <Button size="sm" asChild className="flex-1">
-                  <Link to="/auth" onClick={() => setOpen(false)}>Sign in</Link>
-                </Button>
+                <>
+                  <Button size="sm" variant="outline" onClick={() => { void signInWithGoogle(); setOpen(false); }} className="flex-1">
+                    <GoogleIcon className="mr-2 h-4 w-4" /> Google
+                  </Button>
+                  <Button size="sm" asChild className="flex-1">
+                    <Link to="/auth" onClick={() => setOpen(false)}>Sign in</Link>
+                  </Button>
+                </>
               )}
             </div>
             <div className="mt-2 flex flex-col gap-2 border-t border-border pt-3">
