@@ -167,9 +167,14 @@ export function Header() {
                   <Button size="sm" variant="ghost" onClick={signOut}><LogOut className="h-4 w-4" /></Button>
                 </>
               ) : (
-                <Button size="sm" asChild className="flex-1">
-                  <Link to="/auth" onClick={() => setOpen(false)}>Sign in</Link>
-                </Button>
+                <>
+                  <Button size="sm" variant="outline" onClick={() => { void signInWithGoogle(); setOpen(false); }} className="flex-1">
+                    <GoogleIcon className="mr-2 h-4 w-4" /> Google
+                  </Button>
+                  <Button size="sm" asChild className="flex-1">
+                    <Link to="/auth" onClick={() => setOpen(false)}>Sign in</Link>
+                  </Button>
+                </>
               )}
             </div>
             <div className="mt-2 flex flex-col gap-2 border-t border-border pt-3">
