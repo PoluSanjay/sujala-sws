@@ -15,6 +15,16 @@ import { CartDrawer } from "@/components/site/CartDrawer";
 import type { User as SBUser } from "@supabase/supabase-js";
 import swsLogo from "@/assets/sws-logo.png.asset.json";
 
+const GoogleIcon = ({ className }: { className?: string }) => (
+  <svg viewBox="0 0 24 24" className={className} aria-hidden="true">
+    <path fill="#4285F4" d="M22.5 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.9a5.05 5.05 0 0 1-2.19 3.31v2.75h3.54c2.07-1.91 3.25-4.72 3.25-8.07z" />
+    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.68l-3.54-2.75c-.98.66-2.24 1.06-3.74 1.06-2.87 0-5.3-1.94-6.17-4.55H2.18v2.86A11 11 0 0 0 12 23z" />
+    <path fill="#FBBC05" d="M5.83 14.08A6.6 6.6 0 0 1 5.46 12c0-.72.13-1.42.36-2.08V7.06H2.18A11 11 0 0 0 1 12c0 1.77.43 3.45 1.18 4.94l3.65-2.86z" />
+    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.2 1.65l3.14-3.14C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.65 2.86C6.7 7.32 9.13 5.38 12 5.38z" />
+  </svg>
+);
+
+
 const nav = [
   { to: "/", label: "Home" },
   { to: "/products", label: "Products" },
