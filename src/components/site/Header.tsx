@@ -53,6 +53,18 @@ export function Header() {
     navigate({ to: "/" });
   };
 
+  const signInWithGoogle = async () => {
+    const result = await lovable.auth.signInWithOAuth("google", { redirect_uri: window.location.origin });
+    if (result.error) {
+      toast.error("Google sign-in failed");
+      return;
+    }
+    if (!result.redirected) {
+      navigate({ to: "/dashboard" });
+    }
+  };
+
+
   return (
     <header className="sticky top-0 z-40 border-b border-border/60 bg-background/85 backdrop-blur-md">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 md:px-6">
