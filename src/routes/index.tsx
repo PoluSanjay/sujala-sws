@@ -23,7 +23,20 @@ export const Route = createFileRoute("/")({
 });
 
 function HomePage() {
+  const { data: heroSrc } = useQuery({
+    queryKey: ["site-setting", "hero_image_url"],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("site_settings")
+        .select("value")
+        .eq("key", "hero_image_url")
+        .maybeSingle();
+      return data?.value ?? "";
+    },
+  });
+
   const { data: featured } = useQuery({
+
     queryKey: ["featured-products"],
     queryFn: async () => {
       const { data, error } = await supabase
