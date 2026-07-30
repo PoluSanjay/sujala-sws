@@ -158,10 +158,16 @@ function AdminInner() {
               </Link>
             </Button>
             <Button variant="outline" asChild>
+              <Link to="/admin/appearance">
+                <Package className="mr-1.5 h-4 w-4" /> Homepage image
+              </Link>
+            </Button>
+            <Button variant="outline" asChild>
               <Link to="/admin/payment">
                 <Wallet className="mr-1.5 h-4 w-4" /> Bank details
               </Link>
             </Button>
+
           </div>
         </div>
       </section>
