@@ -76,8 +76,9 @@ function HomePage() {
           <div className="relative">
             <div className="absolute inset-0 -m-4 rounded-3xl bg-gradient-hero opacity-20 blur-2xl" />
             <div className="relative overflow-hidden rounded-3xl bg-white shadow-elegant ring-1 ring-black/5">
-              <img src={heroImg} alt="Sujala RO water purifier" width={1600} height={1200} className="h-full w-full object-cover" />
+              <img src={heroSrc || heroImg} alt="Sujala RO water purifier" width={1600} height={1200} className="h-full w-full object-cover" />
             </div>
+
             <div className="absolute -bottom-6 -left-6 hidden rounded-2xl bg-white p-4 shadow-hover ring-1 ring-black/5 md:block">
               <div className="flex items-center gap-3">
                 <div className="grid h-10 w-10 place-items-center rounded-full bg-success/15">
