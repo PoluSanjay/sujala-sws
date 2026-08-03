@@ -1,23 +1,11 @@
-import fs from 'node:fs';
-import path from 'node:path';
 import { Router } from 'express';
-import multer from 'multer';
 import { z } from 'zod';
 import { AppSettings, Complaint, Notification, Order, PaymentSettings, Product, User } from '../models.js';
 import { appSettings, asyncRoute, publicUser } from '../helpers.js';
 import { authenticate, requireRole, rolesFor, setRoles } from '../security.js';
+import { upload, uploadBuffer } from '../upload.js';
 
 const router = Router();
-const uploadDir = process.env.UPLOAD_DIR || path.resolve(process.cwd(), 'uploads');
-fs.mkdirSync(uploadDir, { recursive: true });
-const heroUpload = multer({
-  storage: multer.diskStorage({
-    destination: uploadDir,
-    filename: (req, file, cb) => cb(null, 'hero-' + Date.now() + path.extname(file.originalname).toLowerCase())
-  }),
-  limits: { fileSize: 5 * 1024 * 1024 },
-  fileFilter: (req, file, cb) => cb(null, /^image\/(png|jpe?g|webp|avif|gif)$/.test(file.mimetype))
-});
 const orderUpdate = z.object({
   status: z.enum(['pending', 'confirmed', 'shipped', 'delivered', 'cancelled']).optional(),
   payment_status: z.enum(['pending', 'paid', 'failed']).optional()
@@ -126,12 +114,19 @@ router.put('/settings', asyncRoute(async (req, res) => {
   res.json({ settings: plain });
 }));
 
-router.post('/settings/hero', heroUpload.single('image'), asyncRoute(async (req, res) => {
+router.post('/settings/hero', upload.single('image'), asyncRoute(async (req, res) => {
   if (!req.file) return res.status(400).json({ error: 'Please choose a JPG, PNG or WebP image under 5 MB' });
+  const hero_image_url = await uploadBuffer(req.file.buffer, 'sws/hero');
   const current = await appSettings();
-  const hero_image_url = '/uploads/' + req.file.filename;
   await AppSettings.findByIdAndUpdate(current._id, { $set: { hero_image_url } });
   res.json({ hero_image_url });
+}));
+
+// Generic product image upload -> permanent https URL
+router.post('/upload', upload.single('file'), asyncRoute(async (req, res) => {
+  if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
+  const url = await uploadBuffer(req.file.buffer, 'sws/products');
+  res.json({ url, image_url: url });
 }));
 
 router.get('/users', asyncRoute(async (req, res) => {
