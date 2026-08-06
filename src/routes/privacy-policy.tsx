@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import type { ReactNode } from "react";
 import { Mail, ShieldCheck } from "lucide-react";
 import { SiteShell } from "@/components/site/SiteShell";
 
@@ -99,7 +100,7 @@ function PrivacyPolicyPage() {
   );
 }
 
-function PolicySection({ title, children }: { title: string; children: React.ReactNode }) {
+function PolicySection({ title, children }: { title: string; children: ReactNode }) {
   return (
     <section>
       <h2 className="text-2xl font-bold text-foreground">{title}</h2>

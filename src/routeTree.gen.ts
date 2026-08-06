@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as TrackRouteImport } from './routes/track'
 import { Route as ServicesRouteImport } from './routes/services'
 import { Route as ProductsRouteImport } from './routes/products'
+import { Route as PrivacyPolicyRouteImport } from './routes/privacy-policy'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as ComplaintsRouteImport } from './routes/complaints'
 import { Route as CheckoutRouteImport } from './routes/checkout'
@@ -41,6 +42,11 @@ const ServicesRoute = ServicesRouteImport.update({
 const ProductsRoute = ProductsRouteImport.update({
   id: '/products',
   path: '/products',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyPolicyRoute = PrivacyPolicyRouteImport.update({
+  id: '/privacy-policy',
+  path: '/privacy-policy',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ContactRoute = ContactRouteImport.update({
@@ -128,6 +134,7 @@ export interface FileRoutesByFullPath {
   '/checkout': typeof CheckoutRoute
   '/complaints': typeof ComplaintsRoute
   '/contact': typeof ContactRoute
+  '/privacy-policy': typeof PrivacyPolicyRoute
   '/products': typeof ProductsRouteWithChildren
   '/services': typeof ServicesRoute
   '/track': typeof TrackRoute
@@ -147,6 +154,7 @@ export interface FileRoutesByTo {
   '/checkout': typeof CheckoutRoute
   '/complaints': typeof ComplaintsRoute
   '/contact': typeof ContactRoute
+  '/privacy-policy': typeof PrivacyPolicyRoute
   '/products': typeof ProductsRouteWithChildren
   '/services': typeof ServicesRoute
   '/track': typeof TrackRoute
@@ -167,6 +175,7 @@ export interface FileRoutesById {
   '/checkout': typeof CheckoutRoute
   '/complaints': typeof ComplaintsRoute
   '/contact': typeof ContactRoute
+  '/privacy-policy': typeof PrivacyPolicyRoute
   '/products': typeof ProductsRouteWithChildren
   '/services': typeof ServicesRoute
   '/track': typeof TrackRoute
@@ -188,6 +197,7 @@ export interface FileRouteTypes {
     | '/checkout'
     | '/complaints'
     | '/contact'
+    | '/privacy-policy'
     | '/products'
     | '/services'
     | '/track'
@@ -207,6 +217,7 @@ export interface FileRouteTypes {
     | '/checkout'
     | '/complaints'
     | '/contact'
+    | '/privacy-policy'
     | '/products'
     | '/services'
     | '/track'
@@ -226,6 +237,7 @@ export interface FileRouteTypes {
     | '/checkout'
     | '/complaints'
     | '/contact'
+    | '/privacy-policy'
     | '/products'
     | '/services'
     | '/track'
@@ -247,6 +259,7 @@ export interface RootRouteChildren {
   CheckoutRoute: typeof CheckoutRoute
   ComplaintsRoute: typeof ComplaintsRoute
   ContactRoute: typeof ContactRoute
+  PrivacyPolicyRoute: typeof PrivacyPolicyRoute
   ProductsRoute: typeof ProductsRouteWithChildren
   ServicesRoute: typeof ServicesRoute
   TrackRoute: typeof TrackRoute
@@ -274,6 +287,13 @@ declare module '@tanstack/react-router' {
       path: '/products'
       fullPath: '/products'
       preLoaderRoute: typeof ProductsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy-policy': {
+      id: '/privacy-policy'
+      path: '/privacy-policy'
+      fullPath: '/privacy-policy'
+      preLoaderRoute: typeof PrivacyPolicyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/contact': {
@@ -434,6 +454,7 @@ const rootRouteChildren: RootRouteChildren = {
   CheckoutRoute: CheckoutRoute,
   ComplaintsRoute: ComplaintsRoute,
   ContactRoute: ContactRoute,
+  PrivacyPolicyRoute: PrivacyPolicyRoute,
   ProductsRoute: ProductsRouteWithChildren,
   ServicesRoute: ServicesRoute,
   TrackRoute: TrackRoute,
