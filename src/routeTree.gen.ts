@@ -13,6 +13,7 @@ import { Route as TrackRouteImport } from './routes/track'
 import { Route as ServicesRouteImport } from './routes/services'
 import { Route as ProductsRouteImport } from './routes/products'
 import { Route as PrivacyPolicyRouteImport } from './routes/privacy-policy'
+import { Route as DeleteAccountRouteImport } from './routes/delete-account'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as ComplaintsRouteImport } from './routes/complaints'
 import { Route as CheckoutRouteImport } from './routes/checkout'
@@ -47,6 +48,11 @@ const ProductsRoute = ProductsRouteImport.update({
 const PrivacyPolicyRoute = PrivacyPolicyRouteImport.update({
   id: '/privacy-policy',
   path: '/privacy-policy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DeleteAccountRoute = DeleteAccountRouteImport.update({
+  id: '/delete-account',
+  path: '/delete-account',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ContactRoute = ContactRouteImport.update({
@@ -134,6 +140,7 @@ export interface FileRoutesByFullPath {
   '/checkout': typeof CheckoutRoute
   '/complaints': typeof ComplaintsRoute
   '/contact': typeof ContactRoute
+  '/delete-account': typeof DeleteAccountRoute
   '/privacy-policy': typeof PrivacyPolicyRoute
   '/products': typeof ProductsRouteWithChildren
   '/services': typeof ServicesRoute
@@ -154,6 +161,7 @@ export interface FileRoutesByTo {
   '/checkout': typeof CheckoutRoute
   '/complaints': typeof ComplaintsRoute
   '/contact': typeof ContactRoute
+  '/delete-account': typeof DeleteAccountRoute
   '/privacy-policy': typeof PrivacyPolicyRoute
   '/products': typeof ProductsRouteWithChildren
   '/services': typeof ServicesRoute
@@ -175,6 +183,7 @@ export interface FileRoutesById {
   '/checkout': typeof CheckoutRoute
   '/complaints': typeof ComplaintsRoute
   '/contact': typeof ContactRoute
+  '/delete-account': typeof DeleteAccountRoute
   '/privacy-policy': typeof PrivacyPolicyRoute
   '/products': typeof ProductsRouteWithChildren
   '/services': typeof ServicesRoute
@@ -197,6 +206,7 @@ export interface FileRouteTypes {
     | '/checkout'
     | '/complaints'
     | '/contact'
+    | '/delete-account'
     | '/privacy-policy'
     | '/products'
     | '/services'
@@ -217,6 +227,7 @@ export interface FileRouteTypes {
     | '/checkout'
     | '/complaints'
     | '/contact'
+    | '/delete-account'
     | '/privacy-policy'
     | '/products'
     | '/services'
@@ -237,6 +248,7 @@ export interface FileRouteTypes {
     | '/checkout'
     | '/complaints'
     | '/contact'
+    | '/delete-account'
     | '/privacy-policy'
     | '/products'
     | '/services'
@@ -259,6 +271,7 @@ export interface RootRouteChildren {
   CheckoutRoute: typeof CheckoutRoute
   ComplaintsRoute: typeof ComplaintsRoute
   ContactRoute: typeof ContactRoute
+  DeleteAccountRoute: typeof DeleteAccountRoute
   PrivacyPolicyRoute: typeof PrivacyPolicyRoute
   ProductsRoute: typeof ProductsRouteWithChildren
   ServicesRoute: typeof ServicesRoute
@@ -294,6 +307,13 @@ declare module '@tanstack/react-router' {
       path: '/privacy-policy'
       fullPath: '/privacy-policy'
       preLoaderRoute: typeof PrivacyPolicyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/delete-account': {
+      id: '/delete-account'
+      path: '/delete-account'
+      fullPath: '/delete-account'
+      preLoaderRoute: typeof DeleteAccountRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/contact': {
@@ -454,6 +474,7 @@ const rootRouteChildren: RootRouteChildren = {
   CheckoutRoute: CheckoutRoute,
   ComplaintsRoute: ComplaintsRoute,
   ContactRoute: ContactRoute,
+  DeleteAccountRoute: DeleteAccountRoute,
   PrivacyPolicyRoute: PrivacyPolicyRoute,
   ProductsRoute: ProductsRouteWithChildren,
   ServicesRoute: ServicesRoute,
@@ -463,3 +484,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
