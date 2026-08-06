@@ -37,6 +37,7 @@ export function Footer() {
               <li><Link to="/products" className="hover:text-primary">Products</Link></li>
               <li><Link to="/contact" className="hover:text-primary">Contact</Link></li>
               <li><Link to="/privacy-policy" className="hover:text-primary">Privacy policy</Link></li>
+              <li><Link to="/delete-account" className="hover:text-primary">Delete account</Link></li>
             </ul>
           </div>
 
